@@ -3,6 +3,8 @@ info:
   title: "user auth api"
   description: "user auth"
   version: "1.0.0"
+servers:
+  - url: http://localhost:3000
 paths:
   /users:
     post:
@@ -37,12 +39,11 @@ paths:
           description: >
             Successfully authenticated.
             The session ID is returned in a cookie named `MYSESSION`. You need to include this cookie in subsequent requests.
-          headers: 
+          headers:
             Set-Cookie:
               schema: 
                 type: string
-                example: MYSESSION=abcde12345; Path=/; HttpOnly
-
+                example: MYSESSION=abcde12345;
   /logout:
     post:
       summary: "logout"
@@ -51,7 +52,6 @@ paths:
       responses:
         200:
           description: "OK"
-
 components:
   schemas:
     User:

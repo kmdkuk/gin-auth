@@ -15,7 +15,7 @@ services:
     ports:
       - 3000:3000
   swagger:
-    image: swaggerapi/swagger-ui:latest
+    image: swaggerapi/swagger-ui
     volumes:
       - ./docs/swagger.yaml:/usr/share/nginx/html/api/swagger.yaml
     environment:
