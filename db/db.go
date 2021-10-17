@@ -37,10 +37,11 @@ func Init() error {
 	var err error = nil
 	db, err = gorm.Open(dialect, connect)
 	if err != nil {
-		fmt.Println("open error", err)
 		return err
 	}
-	autoMigration()
+	if err := autoMigration(); err != nil {
+		return err
+	}
 	return nil
 }
 
@@ -56,6 +57,7 @@ func Close() {
 	}
 }
 
-func autoMigration() {
+func autoMigration() error {
 	db.AutoMigrate(&model.User{})
+	return db.Error
 }

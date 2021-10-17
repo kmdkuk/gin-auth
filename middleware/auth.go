@@ -1,7 +1,7 @@
 package middleware
 
 import (
-	"fmt"
+	"log"
 	"net/http"
 
 	"github.com/gin-contrib/sessions"
@@ -13,7 +13,7 @@ func LoginCheckMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		session := sessions.Default(c)
 		loginUserID := session.Get(constants.USERID_KEY)
-		fmt.Println(loginUserID)
+		log.Println(loginUserID)
 
 		if loginUserID == nil {
 			c.Status(http.StatusUnauthorized)

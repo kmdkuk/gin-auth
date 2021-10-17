@@ -1,7 +1,7 @@
 package handler
 
 import (
-	"fmt"
+	"log"
 	"net/http"
 
 	"github.com/gin-contrib/sessions"
@@ -33,21 +33,21 @@ func (u *userHandler) Login(c *gin.Context) {
 	var request model.User
 	err := c.BindJSON(&request)
 	if err != nil {
-		fmt.Println("error bind json", err)
+		log.Println("error bind json", err)
 		c.Status(http.StatusBadRequest)
 		return
 	}
 
 	user, err := u.userRepository.GetUserByID(request.UserID)
 	if err != nil {
-		fmt.Println("invalid userid")
+		log.Println("invalid userid")
 		c.Status(http.StatusBadRequest)
 		return
 	}
 
 	err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(request.Password))
 	if err != nil {
-		fmt.Println("invalid password")
+		log.Println("invalid password")
 		c.Status(http.StatusBadRequest)
 		return
 	}
@@ -86,7 +86,7 @@ func (u *userHandler) GetCurrentUser(c *gin.Context) {
 
 	user, err := u.userRepository.GetUserByID(loginUserID.(string))
 	if err != nil {
-		fmt.Println("user not found ", err)
+		log.Println("user not found ", err)
 		c.Status(http.StatusInternalServerError)
 		return
 	}
