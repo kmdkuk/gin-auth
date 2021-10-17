@@ -12,7 +12,24 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-func Login(c *gin.Context) {
+type UserHandler interface {
+	Login(c *gin.Context)
+	Logout(c *gin.Context)
+	CreateUser(c *gin.Context)
+	GetCurrentUser(c *gin.Context)
+}
+
+type userHandler struct {
+	userRepository repository.UserRepository
+}
+
+func NewUserHandler(userRepository repository.UserRepository) UserHandler {
+	return &userHandler{
+		userRepository: userRepository,
+	}
+}
+
+func (u *userHandler) Login(c *gin.Context) {
 	var request model.User
 	err := c.BindJSON(&request)
 	if err != nil {
@@ -21,7 +38,7 @@ func Login(c *gin.Context) {
 		return
 	}
 
-	user, err := repository.GetUserByID(request.UserID)
+	user, err := u.userRepository.GetUserByID(request.UserID)
 	if err != nil {
 		fmt.Println("invalid userid")
 		c.Status(http.StatusBadRequest)
@@ -41,21 +58,21 @@ func Login(c *gin.Context) {
 	c.Status(http.StatusOK)
 }
 
-func Logout(c *gin.Context) {
+func (u *userHandler) Logout(c *gin.Context) {
 	session := sessions.Default(c)
 	session.Clear()
 	session.Save()
 	c.Status(http.StatusOK)
 }
 
-func CreateUser(c *gin.Context) {
+func (u *userHandler) CreateUser(c *gin.Context) {
 	var request model.User
 	err := c.BindJSON(&request)
 	if err != nil {
 		c.Status(http.StatusBadRequest)
 		return
 	}
-	err = repository.CreateUser(request)
+	err = u.userRepository.CreateUser(request)
 	if err != nil {
 		c.Status(http.StatusBadRequest)
 		return
@@ -63,11 +80,11 @@ func CreateUser(c *gin.Context) {
 	c.Status(http.StatusOK)
 }
 
-func GetCurrentUser(c *gin.Context) {
+func (u *userHandler) GetCurrentUser(c *gin.Context) {
 	session := sessions.Default(c)
 	loginUserID := session.Get(constants.USERID_KEY)
 
-	user, err := repository.GetUserByID(loginUserID.(string))
+	user, err := u.userRepository.GetUserByID(loginUserID.(string))
 	if err != nil {
 		fmt.Println("user not found ", err)
 		c.Status(http.StatusInternalServerError)
