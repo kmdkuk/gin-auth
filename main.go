@@ -5,11 +5,17 @@ import (
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-contrib/sessions/cookie"
 	"github.com/gin-gonic/gin"
+	"github.com/kmdkuk/gin-auth/db"
 	"github.com/kmdkuk/gin-auth/handler"
 	"github.com/kmdkuk/gin-auth/middleware"
 )
 
 func main() {
+	if err := db.Init(); err != nil {
+		panic(err)
+	}
+	defer db.Close()
+
 	router := gin.Default()
 	store := cookie.NewStore([]byte("secret"))
 	router.Use(sessions.Sessions("MYSESSION", store))

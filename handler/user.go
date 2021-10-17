@@ -21,7 +21,7 @@ func Login(c *gin.Context) {
 		return
 	}
 
-	user, err := repository.GetUserByID(request.ID)
+	user, err := repository.GetUserByID(request.UserID)
 	if err != nil {
 		fmt.Println("invalid userid")
 		c.Status(http.StatusBadRequest)
@@ -36,7 +36,7 @@ func Login(c *gin.Context) {
 	}
 
 	session := sessions.Default(c)
-	session.Set(constants.USERID_KEY, user.ID)
+	session.Set(constants.USERID_KEY, user.UserID)
 	session.Save()
 	c.Status(http.StatusOK)
 }

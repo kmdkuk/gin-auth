@@ -13,11 +13,11 @@ build:
 
 .PHONY: user-create
 user-create:
-	curl -X 'POST' 'http://localhost:3000/users' -H 'accept: */*' -H 'Content-Type: application/json' -d '{"id": "string","password": "string"}'
+	curl -X 'POST' 'http://localhost:3000/users' -H 'accept: */*' -H 'Content-Type: application/json' -d '{"user_id": "string","password": "string"}'
 
 .PHONY: user-login
 user-login:
-	curl -v -X 'POST' 'http://localhost:3000/login' -H 'accept: */*' -H 'Content-Type: application/json' -d '{"id": "string", "password": "string" }'
+	curl -v -X 'POST' 'http://localhost:3000/login' -H 'accept: */*' -H 'Content-Type: application/json' -d '{"user_id": "string", "password": "string" }'
 
 MYSESSION=test
 .PHONY: user-current

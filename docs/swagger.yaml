@@ -57,7 +57,7 @@ components:
     User:
       type: "object"
       properties:
-        id:
+        user_id:
           type: "string"
         password:
           type: "string"
