@@ -1,0 +1,70 @@
+openapi: 3.0.0
+info:
+  title: "user auth api"
+  description: "user auth"
+  version: "1.0.0"
+paths:
+  /users:
+    post:
+      summary: "user create"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/User"
+      responses:
+        200:
+          description: "OK"
+    get:
+      summary: "current user info"
+      security:
+        - cookieAuth: []
+      responses:
+        200:
+          description: "OK"
+        
+  /login:
+    post:
+      summary: "login"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/User"
+      responses:
+        200:
+          description: >
+            Successfully authenticated.
+            The session ID is returned in a cookie named `MYSESSION`. You need to include this cookie in subsequent requests.
+          headers: 
+            Set-Cookie:
+              schema: 
+                type: string
+                example: MYSESSION=abcde12345; Path=/; HttpOnly
+
+  /logout:
+    post:
+      summary: "logout"
+      security:
+        - cookieAuth: []
+      responses:
+        200:
+          description: "OK"
+
+components:
+  schemas:
+    User:
+      type: "object"
+      properties:
+        id:
+          type: "string"
+        password:
+          type: "string"
+          writeOnly: true
+  # https://swagger.io/docs/specification/authentication/cookie-authentication/
+  securitySchemes:
+    cookieAuth:
+      type: apiKey
+      in: cookie
+      name: MYSESSION  # cookie name

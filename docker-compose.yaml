@@ -1,0 +1,27 @@
+version: "3"
+services:
+  db:
+    image: mysql:8.0
+    env_file: .env
+    command: --default-authentication-plugin=mysql_native_password
+    volumes:
+      - mysql-data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+  api:
+    build: .
+    links:
+      - db
+    ports:
+      - 3000:3000
+  swagger:
+    image: swaggerapi/swagger-ui:latest
+    volumes:
+      - ./docs/swagger.yaml:/usr/share/nginx/html/api/swagger.yaml
+    environment:
+      - API_URL=api/swagger.yaml
+    ports:
+      - "10000:8080"
+volumes:
+  mysql-data:
+    driver: local
