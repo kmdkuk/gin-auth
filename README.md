@@ -1,5 +1,7 @@
 # gin-auth
 
+[![CI](https://github.com/kmdkuk/gin-auth/actions/workflows/test_and_build.yaml/badge.svg)](https://github.com/kmdkuk/gin-auth/actions/workflows/test_and_build.yaml)
+
 ## getting start
 
 ```

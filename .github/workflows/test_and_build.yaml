@@ -1,0 +1,50 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    types: [opened, synchronize, edited]
+
+jobs:
+  prepare:
+    runs-on: ubuntu-latest
+    if: "!contains(github.event.pull_request.title, '[wip]') && !contains(github.event.pull_request.title, '[ci skip]') && !contains(github.event.pull_request.title, '[skip ci]')"
+    steps:
+      - run: echo "${{ github.event.pull_request.title }}"
+  test:
+    runs-on: ${{ matrix.os }}
+    needs: prepare
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - ubuntu-latest
+          - macOS-latest
+          - windows-latest
+    steps:
+      - name: setup go
+        uses: actions/setup-go@v2
+        with:
+          go-version: 1.17.1
+      - name: checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 1
+      - name: cache
+        uses: actions/cache@v2
+        with:
+          path: ~/go/pkg/mod
+          key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
+          restore-keys: |
+            ${{ runner.os }}-go-
+      - name: go mod download
+        run: go mod download
+      - name: go install
+        run: make install-go-tools
+      - name: Ensure go.mod is already tidied
+        run: go mod tidy && git diff -s --exit-code go.sum
+      - name: lint
+        run: make lint
+      - name: test
+        run: make test

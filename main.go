@@ -44,5 +44,7 @@ func main() {
 	user.Use(middleware.LoginCheckMiddleware())
 	user.GET("", userHandler.GetCurrentUser)
 
-	router.Run(":3000")
+	if err := router.Run(":3000"); err != nil {
+		panic(err)
+	}
 }

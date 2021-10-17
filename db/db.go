@@ -34,7 +34,7 @@ const (
 func Init() error {
 	connectTemplate := "%s:%s@%s/%s?charset=utf8&parseTime=True&loc=Local"
 	connect := fmt.Sprintf(connectTemplate, dbUser, dbPass, dbProtocol, dbName)
-	var err error = nil
+	var err error
 	db, err = gorm.Open(dialect, connect)
 	if err != nil {
 		return err

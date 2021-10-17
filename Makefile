@@ -23,3 +23,16 @@ MYSESSION=test
 .PHONY: user-current
 user-current:
 	curl -X 'GET' 'http://localhost:3000/users' -H 'accept: */*' -H 'Cookie: MYSESSION=${MYSESSION}'
+
+.PHONY: test
+test: 
+	go test -race -timeout 30m -coverprofile=coverage.txt -covermode=atomic ./...
+	go tool cover -html=coverage.txt -o coverage.html
+
+.PHONY: lint
+lint:
+	golangci-lint run ./...
+
+.PHONY: install-go-tools
+install-go-tools:
+	cat tools.go | awk -F'"' '/_/ {print $$2}' | xargs -tI {} go install {}

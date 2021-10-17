@@ -54,14 +54,18 @@ func (u *userHandler) Login(c *gin.Context) {
 
 	session := sessions.Default(c)
 	session.Set(constants.USERID_KEY, user.UserID)
-	session.Save()
+	if err := session.Save(); err != nil {
+		c.Status(http.StatusInternalServerError)
+	}
 	c.Status(http.StatusOK)
 }
 
 func (u *userHandler) Logout(c *gin.Context) {
 	session := sessions.Default(c)
 	session.Clear()
-	session.Save()
+	if err := session.Save(); err != nil {
+		c.Status(http.StatusInternalServerError)
+	}
 	c.Status(http.StatusOK)
 }
 
