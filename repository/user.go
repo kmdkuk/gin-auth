@@ -38,10 +38,21 @@ func (u *userRepository) CreateUser(user model.User) error {
 	}
 	user.Password = string(hashed)
 
-	u.db.NewRecord(user)
-	u.db.Create(&user)
-	if u.db.Error != nil {
-		return u.db.Error
+	tx := u.db.Begin()
+	defer func() {
+		if r := recover(); r != nil {
+			tx.Rollback()
+		}
+	}()
+
+	if err := tx.Error; err != nil {
+		return err
 	}
-	return nil
+
+	if err := tx.Create(&user).Error; err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	return tx.Commit().Error
 }
