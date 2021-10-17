@@ -2,6 +2,7 @@ package db
 
 import (
 	"fmt"
+	"os"
 
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
@@ -20,9 +21,6 @@ const (
 	// ユーザー名
 	dbUser = "root"
 
-	// パスワード
-	dbPass = "pass"
-
 	// プロトコル
 	dbProtocol = "tcp(db:3306)"
 
@@ -32,6 +30,7 @@ const (
 
 // Init is initialize db from main function
 func Init() error {
+	dbPass := os.Getenv("MYSQL_ROOT_PASSWORD")
 	connectTemplate := "%s:%s@%s/%s?charset=utf8&parseTime=True&loc=Local"
 	connect := fmt.Sprintf(connectTemplate, dbUser, dbPass, dbProtocol, dbName)
 	var err error

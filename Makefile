@@ -19,7 +19,7 @@ user-create:
 user-login:
 	curl -v -X 'POST' 'http://localhost:3000/login' -H 'accept: */*' -H 'Content-Type: application/json' -d '{"user_id": "string", "password": "string" }'
 
-MYSESSION=test
+MYSESSION="need any value"
 .PHONY: user-current
 user-current:
 	curl -X 'GET' 'http://localhost:3000/users' -H 'accept: */*' -H 'Cookie: MYSESSION=${MYSESSION}'

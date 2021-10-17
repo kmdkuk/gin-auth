@@ -11,6 +11,7 @@ services:
       - "3306:3306"
   api:
     build: .
+    env_file: .env
     links:
       - db
     ports:
@@ -20,7 +21,7 @@ services:
     volumes:
       - ./docs/swagger.yaml:/usr/share/nginx/html/api/swagger.yaml
     environment:
-      - API_URL=api/swagger.yaml
+      - SWAGGER_JSON=/usr/share/nginx/html/api/swagger.yaml
     ports:
       - "10000:8080"
 volumes:
